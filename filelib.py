@@ -1,11 +1,11 @@
 #!usr/bin/python
 import os
 
-def read_from_file(path=".", file, accp="r"):
+def read_from_file(file, path=".", accp="r"):
 	assert file is not None, "Error! No filename given"
 	fname = "{}/{}".format(path, file)
 	fp = open(fname, accp)
-	lines = [l for l in (line.strip() for line in fp) if lp]
+	lines = [l for l in (line.strip() for line in fp) if l]
 	content = []
 	for line in lines:
 		content.append(line)
@@ -15,7 +15,7 @@ def read_from_file(path=".", file, accp="r"):
 
 
 
-def write_to_file(path=".", file, content, accp="a"):
+def write_to_file(file, content, path=".", accp="a"):
 	assert file is not None, "Error! No filename given"
 	assert content is not None, "Error! No content can be written in file"
 	fname = "{}/{}".format(path, file)
@@ -28,6 +28,6 @@ def write_to_file(path=".", file, content, accp="a"):
 	elif type(content) is dict:
 		for k in content.keys():
 			fp.write(k+"\t")
-			write_to_file(path=path, file, content[k], accp=accp)
+			write_to_file(file, content[k], path=path, accp=accp)
 
 	fp.close()
