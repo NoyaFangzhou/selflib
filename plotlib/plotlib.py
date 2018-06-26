@@ -14,7 +14,10 @@ import matplotlib.pyplot as plt
 # @para title 		Title
 # @para xlabel 		Xlabel on the x-axis
 # @para ylabel 		Ylabel on the y-axis
-def bar_plot(data, loc=None, grplabel=None, onavg=False, text=False, color=None, legend=None, title=None, xlabel=None, ylabel=None):
+# @para	save		Whether save the generated img 
+# @para	dir 		The directory the img will be saved to
+# @para	fn 			The filename of that img
+def bar_plot(data, loc=None, grplabel=None, onavg=False, text=False, color=None, legend=None, title=None, xlabel=None, ylabel=None, save=False, dir=".", fn=None):
 	
 	# calculate the avg for each datalist and add it to the end
 	if onavg:
@@ -37,7 +40,7 @@ def bar_plot(data, loc=None, grplabel=None, onavg=False, text=False, color=None,
 	if loc is None:
 		fig, ax = plt.subplots()
 	else:
-		fig, ax = plt.subplots(figsize=tuple(loc))
+		fig, ax = plt.subplots(loc)
 	index = np.arange(n_groups)
 	bar_width = 0.35
 	opacity = 0.8
@@ -64,7 +67,7 @@ def bar_plot(data, loc=None, grplabel=None, onavg=False, text=False, color=None,
 		if text:
 			for rect in ax.patches:
 				height = rect.get_height()
-				ax.text(rect.get_x() + rect.get_width()/2., 1.025*height, '%.2f' % float(height),
+				ax.text(rect.get_x() + rect.get_width()/2., 1.025*height, '%f' % float(height),
 					color='black', 
 					fontweight='bold',
 		            ha='center', 
@@ -85,8 +88,23 @@ def bar_plot(data, loc=None, grplabel=None, onavg=False, text=False, color=None,
 	if legend is not None:
 		plt.legend(loc="best")
 
-	plt.tight_layout()
-	plt.show()
+
+
+	if save:
+		assert fn is not None, "Error! No filename given"
+		fname = "{}/{}".format(dir, fn)
+		plt.savefig(fname, 
+			facecolor='w', 
+			edgecolor='w',
+			orientation='portrait', 
+			format="png")
+	if loc is None:
+		plt.tight_layout()
+		plt.show()
+	else:
+		print("[REMINDER]!\nAs you may have subfigures, you have to write plt.tight_layout() and plt.show() yourself")
+
+
 
 
 # draw the line chart
@@ -98,6 +116,9 @@ def bar_plot(data, loc=None, grplabel=None, onavg=False, text=False, color=None,
 # @para title 		Title
 # @para xlabel 		Xlabel on the x-axis
 # @para ylabel 		Ylabel on the y-axis
+# @para	save		Whether save the generated img 
+# @para	dir 		The directory the img will be saved to
+# @para	fn 			The filename of that img
 
 # ================    ===============================
 # character           description
@@ -129,7 +150,7 @@ def bar_plot(data, loc=None, grplabel=None, onavg=False, text=False, color=None,
 #    |                vline marker
 #    _                hline marker
 # ================    ===============================
-def line_plot(data, loc=None, color=None, mark=None, legend=None, title=None, xlabel=None, ylabel=None):
+def line_plot(data, loc=None, color=None, mark=None, legend=None, title=None, xlabel=None, ylabel=None, save=False, dir=None, fn=None):
 	if color is not None:
 		assert len(data) <= len(color), "Data size doens't match the given color size.\nExpected {}, Actual {}".format(len(data), len(color))
 	if legend is not None:
@@ -139,7 +160,7 @@ def line_plot(data, loc=None, color=None, mark=None, legend=None, title=None, xl
 	if loc is None:
 		fig, ax = plt.subplots()
 	else:
-		fig, ax = plt.subplots(figsize=tuple(loc))
+		fig, ax = plt.subplots(loc)
 	
 	index = np.arange(len(data[0]))
 
@@ -174,8 +195,23 @@ def line_plot(data, loc=None, color=None, mark=None, legend=None, title=None, xl
 
 	if legend is not None:
 		plt.legend(loc="best")
-	plt.tight_layout()
-	plt.show()
+
+	if save:
+		assert fn is not None, "Error! No filename given"
+		fname = "{}/{}".format(dir, fn)
+		plt.savefig(fname, 
+			facecolor='w', 
+			edgecolor='w',
+			orientation='portrait', 
+			format="png")
+
+	if loc is None:
+		plt.tight_layout()
+		plt.show()
+	else:
+		print("[REMINDER]!\nAs you may have subfigures, you have to write plt.tight_layout() and plt.show() yourself")
+
+
 
 
 # draw the pie chart
@@ -188,7 +224,10 @@ def line_plot(data, loc=None, color=None, mark=None, legend=None, title=None, xl
 # @para title 		Title
 # @para xlabel 		Xlabel on the x-axis
 # @para ylabel 		Ylabel on the y-axis
-def pie_plot(data, loc=None, sangle=90.0, text=False, color=None, legend=None, title=None, xlabel=None, ylabel=None):
+# @para	save		Whether save the generated img 
+# @para	dir 		The directory the img will be saved to
+# @para	fn 			The filename of that img
+def pie_plot(data, loc=None, sangle=90.0, text=False, color=None, legend=None, title=None, xlabel=None, ylabel=None, save=False, dir=None, fn=None):
 	if color is not None:
 		assert len(data) <= len(color), "Data size doens't match the given color size.\nExpected {}, Actual {}".format(len(data), len(color))
 	if legend is not None:
@@ -198,12 +237,12 @@ def pie_plot(data, loc=None, sangle=90.0, text=False, color=None, legend=None, t
 	if loc is None:
 		fig, ax = plt.subplots()
 	else:
-		fig, ax = plt.subplots(figsize=tuple(loc))
+		fig, ax = plt.subplots(loc)
 
 	if color is None:
 		if text:
 			patches = plt.pie(data, 
-				autopct='%1.2f%%',
+				autopct='%f%%',
 				shadow=False, 
 				startangle=sangle,
 				labels=legend if legend is not None else None)
@@ -215,7 +254,7 @@ def pie_plot(data, loc=None, sangle=90.0, text=False, color=None, legend=None, t
 	else:
 		if text:
 			patches = plt.pie(data, 
-				autopct='%1.2f%%',
+				autopct='%f%%',
 				colors=color, 
 				shadow=False, 
 				startangle=sangle,
@@ -237,8 +276,21 @@ def pie_plot(data, loc=None, sangle=90.0, text=False, color=None, legend=None, t
 		ax.set_ylabel(ylabel)
 
 	plt.axis('equal')
-	plt.tight_layout()
-	plt.show()
+
+	if save:
+		assert fn is not None, "Error! No filename given"
+		fname = "{}/{}".format(dir, fn)
+		plt.savefig(fname, 
+			facecolor='w', 
+			edgecolor='w',
+			orientation='portrait', 
+			format="png")
+
+	if loc is None:
+		plt.tight_layout()
+		plt.show()
+	else:
+		print("[REMINDER]!\nAs you may have subfigures, you have to write plt.tight_layout() and plt.show() yourself")
 
 
 # draw the histogram 
